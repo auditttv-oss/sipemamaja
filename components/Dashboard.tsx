@@ -45,44 +45,44 @@ export const Dashboard: React.FC<DashboardProps> = ({ onViewChange }) => {
     <div className="space-y-6">
       {/* Welcome Section */}
       <div className="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
-        <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
-          <img src={LOGO_URL} alt="Logo" className="h-10 w-auto" />
-          Selamat datang di Sipema Maja (Sistem Informasi Permata Mutiara Maja)
+        <h2 className="text-sm font-bold text-gray-800 flex items-center gap-3">
+          <img src={LOGO_URL} alt="Logo" className="h-6 w-auto" />
+          Selamat datang di Sipema Maja
         </h2>
-        <p className="text-gray-500 mt-1">Platform terdepan untuk kemudahan pembayaran IPL dan pengelolaan aduan selama masa retensi perumahan</p>
+        <p className="text-gray-500 mt-1 whitespace-nowrap">(Sistem Informasi Permata Mutiara Maja)</p>
       </div>
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div 
           onClick={() => onViewChange('billing')}
-          className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-shadow"
+          className="bg-white p-4 sm:p-5 rounded-xl shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-shadow"
         >
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-sm font-medium text-gray-500">Tagihan Belum Lunas</p>
-              <h3 className="text-2xl font-bold text-gray-800 mt-1">{unpaidCount}</h3>
+              <p className="text-xs sm:text-sm font-medium text-gray-500">Tagihan Belum Lunas</p>
+              <h3 className="text-lg sm:text-2xl font-bold text-gray-800 mt-1">{unpaidCount}</h3>
             </div>
             <div className="p-2 bg-rose-100 rounded-lg text-rose-600">
-              <Wallet size={20} />
+              <Wallet size={18} />
             </div>
           </div>
           <div className="mt-4 text-xs text-rose-600 font-medium flex items-center">
-            Segera selesaikan pembayaran <ArrowRight size={12} className="ml-1"/>
+            Segera selesaikan pembayaran <ArrowRight size={10} className="ml-1"/>
           </div>
         </div>
 
         <div 
            onClick={() => onViewChange('complaints')}
-           className="bg-white p-5 rounded-xl shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-shadow"
+           className="bg-white p-4 sm:p-5 rounded-xl shadow-sm border border-gray-100 cursor-pointer hover:shadow-md transition-shadow"
         >
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-sm font-medium text-gray-500">Komplain Belum Selesai</p>
-              <h3 className="text-2xl font-bold text-gray-800 mt-1">{unfinishedComplaints.length}</h3>
+              <p className="text-xs sm:text-sm font-medium text-gray-500">Komplain Belum Selesai</p>
+              <h3 className="text-lg sm:text-2xl font-bold text-gray-800 mt-1">{unfinishedComplaints.length}</h3>
             </div>
             <div className="p-2 bg-amber-100 rounded-lg text-amber-600">
-              <FileWarning size={20} />
+              <FileWarning size={18} />
             </div>
           </div>
           <div className="mt-4 text-xs text-amber-600 font-medium">
@@ -90,14 +90,14 @@ export const Dashboard: React.FC<DashboardProps> = ({ onViewChange }) => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+        <div className="bg-white p-4 sm:p-5 rounded-xl shadow-sm border border-gray-100">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-sm font-medium text-gray-500">Pembayaran Lunas</p>
-              <h3 className="text-2xl font-bold text-gray-800 mt-1">{verifiedPayments.length}</h3>
+              <p className="text-xs sm:text-sm font-medium text-gray-500">Pembayaran Lunas</p>
+              <h3 className="text-lg sm:text-2xl font-bold text-gray-800 mt-1">{verifiedPayments.length}</h3>
             </div>
             <div className="p-2 bg-emerald-100 rounded-lg text-emerald-600">
-              <CheckCircle size={20} />
+              <CheckCircle size={18} />
             </div>
           </div>
           <div className="mt-4 text-xs text-emerald-600 font-medium">
@@ -105,14 +105,14 @@ export const Dashboard: React.FC<DashboardProps> = ({ onViewChange }) => {
           </div>
         </div>
 
-        <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+        <div className="bg-white p-4 sm:p-5 rounded-xl shadow-sm border border-gray-100">
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-sm font-medium text-gray-500">Pembayaran Pending</p>
-              <h3 className="text-2xl font-bold text-gray-800 mt-1">{pendingPayments.length}</h3>
+              <p className="text-xs sm:text-sm font-medium text-gray-500">Pembayaran Pending</p>
+              <h3 className="text-lg sm:text-2xl font-bold text-gray-800 mt-1">{pendingPayments.length}</h3>
             </div>
             <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
-              <TrendingUp size={20} />
+              <TrendingUp size={18} />
             </div>
           </div>
           <div className="mt-4 text-xs text-blue-600 font-medium">
