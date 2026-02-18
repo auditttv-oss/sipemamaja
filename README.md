@@ -312,3 +312,37 @@ Setelah jalan, link uji biasanya:
 - Input `BNIP` di kolom email akan otomatis dianggap sebagai `admin@sipema.com`.
 - Pastikan user tersebut sudah dibuat di **Supabase Authentication → Users** dan punya password.
 - Pastikan profile user ada di tabel `profiles` dengan role `SUPER_ADMIN` untuk akses penuh.
+
+## 🧯 Troubleshooting `lightningcss.win32-ia32-msvc.node` (Windows)
+
+Jika saat `npm run dev` muncul error plugin PostCSS seperti ini:
+
+`Cannot find module '../lightningcss.win32-ia32-msvc.node'`
+
+maka perbaikan yang dipakai di repo ini adalah kembali ke stack Tailwind stabil (v3) tanpa plugin `@tailwindcss/postcss`.
+
+### File yang sudah diperbaiki
+- `package.json`
+  - hapus `@tailwindcss/postcss`
+  - set `tailwindcss` ke `^3.4.17`
+- `postcss.config.js`
+  - ganti plugin dari `@tailwindcss/postcss` menjadi `tailwindcss`
+
+### Yang perlu kamu lakukan di lokal
+```bash
+# dari root project
+rm -rf node_modules package-lock.json
+npm install
+npm run dev -- --host
+```
+
+Jika kamu pakai Windows PowerShell:
+```powershell
+Remove-Item -Recurse -Force node_modules
+Remove-Item -Force package-lock.json
+npm install
+npm run dev -- --host
+```
+
+Setelah berhasil, buka:
+- `http://localhost:5173`
