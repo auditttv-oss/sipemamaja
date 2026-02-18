@@ -356,3 +356,12 @@ Jika browser muter terus dan halaman kosong:
 3. Jalankan ulang setelah clean install dependency.
 
 Konfigurasi `tailwind.config.js` di repo ini sudah diperbaiki untuk kasus tersebut.
+
+### Perbaikan untuk error `[postcss] Unexpected token ... ::-webkit-scrollbar...`
+
+Error ini biasanya terjadi karena isi CSS tidak sengaja masuk ke file konfigurasi Tailwind (`tailwind.config.js`).
+
+Gunakan setup ini agar aman di semua OS:
+1. Simpan konfigurasi utama di `tailwind.config.cjs` (CommonJS).
+2. Pada `postcss.config.js`, set `tailwindcss.config` ke `./tailwind.config.cjs`.
+3. Pastikan rule CSS seperti `::-webkit-scrollbar` hanya ada di `index.css`, **bukan** di file config Tailwind.
