@@ -411,3 +411,32 @@ rm -rf node_modules package-lock.json
 npm install
 npm run dev -- --host
 ```
+
+### Perbaikan untuk error `DataContext.tsx: Unexpected keyword 'import' (20:0)`
+
+Ini menandakan isi `DataContext.tsx` di lokal kamu korup (biasanya ada potongan import ganda atau merge conflict).
+
+Pastikan awal file **harus** seperti ini (hanya satu blok import React di paling atas):
+
+```ts
+import React, { ReactNode, createContext, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  Complaint,
+  UnitData,
+  Invoice,
+  ClusterExpense,
+  ComplaintStatus,
+  InvoiceStatus,
+  Cluster,
+  Vendor,
+  Lead,
+  User,
+  Payment,
+  HouseType,
+  Role,
+} from './types';
+import { MOCK_PAYMENTS, MOCK_HOUSE_TYPES } from './constants';
+import { supabase } from './src/lib/supabaseClient';
+```
+
+Jika berbeda, copy ulang `DataContext.tsx` dari branch terbaru repo ini.
