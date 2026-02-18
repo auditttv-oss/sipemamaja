@@ -365,3 +365,49 @@ Gunakan setup ini agar aman di semua OS:
 1. Simpan konfigurasi utama di `tailwind.config.cjs` (CommonJS).
 2. Pada `postcss.config.js`, set `tailwindcss.config` ke `./tailwind.config.cjs`.
 3. Pastikan rule CSS seperti `::-webkit-scrollbar` hanya ada di `index.css`, **bukan** di file config Tailwind.
+
+### Perbaikan final untuk error `Cannot read properties of undefined (reading 'blocklist')`
+
+Gunakan **hanya** konfigurasi CommonJS untuk Tailwind/PostCSS (hindari campuran ESM/CJS):
+
+`postcss.config.cjs`
+```js
+module.exports = {
+  plugins: [
+    require('tailwindcss')('./tailwind.config.cjs'),
+    require('autoprefixer'),
+  ],
+};
+```
+
+`tailwind.config.cjs`
+```js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    './index.html',
+    './index.tsx',
+    './App.tsx',
+    './DataContext.tsx',
+    './components/**/*.{js,ts,jsx,tsx}',
+    './services/**/*.{js,ts,jsx,tsx}',
+    './lib/**/*.{js,ts,jsx,tsx}',
+    './src/**/*.{js,ts,jsx,tsx}',
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
+
+Dan hapus file berikut jika masih ada:
+- `postcss.config.js`
+- `tailwind.config.js`
+
+Lalu jalankan ulang bersih dependency:
+```bash
+rm -rf node_modules package-lock.json
+npm install
+npm run dev -- --host
+```
