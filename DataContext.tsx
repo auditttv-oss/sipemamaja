@@ -173,41 +173,48 @@ export const DataProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const loadAllData = async () => {
     setLoading(true);
-    const [
-      profilesRes,
-      clustersRes,
-      unitsRes,
-      complaintsRes,
-      invoicesRes,
-      expensesRes,
-      vendorsRes,
-      leadsRes,
-      paymentsRes,
-      houseTypesRes,
-    ] = await Promise.all([
-      supabase.from('profiles').select('*'),
-      supabase.from('clusters').select('*'),
-      supabase.from('units').select('*'),
-      supabase.from('complaints').select('*').order('created_at', { ascending: false }),
-      supabase.from('invoices').select('*').order('year', { ascending: false }),
-      supabase.from('ledger_entries').select('*').order('date', { ascending: false }),
-      supabase.from('vendors').select('*'),
-      supabase.from('leads').select('*').order('created_at', { ascending: false }),
-      supabase.from('payments').select('*').order('created_at', { ascending: false }),
-      supabase.from('house_types').select('*'),
-    ]);
+    try {
+      const results = await Promise.allSettled([
+        supabase.from('profiles').select('*'),
+        supabase.from('clusters').select('*'),
+        supabase.from('units').select('*'),
+        supabase.from('complaints').select('*').order('created_at', { ascending: false }),
+        supabase.from('invoices').select('*').order('year', { ascending: false }),
+        supabase.from('ledger_entries').select('*').order('date', { ascending: false }),
+        supabase.from('vendors').select('*'),
+        supabase.from('leads').select('*').order('created_at', { ascending: false }),
+        supabase.from('payments').select('*').order('created_at', { ascending: false }),
+        supabase.from('house_types').select('*'),
+      ]);
 
-    if (!profilesRes.error) setUsers((profilesRes.data || []).map(toUser));
-    if (!clustersRes.error) setClusters((clustersRes.data || []).map(toCluster));
-    if (!unitsRes.error) setUnits((unitsRes.data || []).map(toUnit));
-    if (!complaintsRes.error) setComplaints((complaintsRes.data || []).map(toComplaint));
-    if (!invoicesRes.error) setInvoices((invoicesRes.data || []).map(toInvoice));
-    if (!expensesRes.error) setExpenses((expensesRes.data || []).map(toExpense));
-    if (!vendorsRes.error) setVendors((vendorsRes.data || []).map(toVendor));
-    if (!leadsRes.error) setLeads((leadsRes.data || []).map(toLead));
-    if (!paymentsRes.error) setPayments((paymentsRes.data || []) as Payment[]);
-    if (!houseTypesRes.error) setHouseTypes((houseTypesRes.data || []) as HouseType[]);
-    setLoading(false);
+      const [
+        profilesRes,
+        clustersRes,
+        unitsRes,
+        complaintsRes,
+        invoicesRes,
+        expensesRes,
+        vendorsRes,
+        leadsRes,
+        paymentsRes,
+        houseTypesRes,
+      ] = results.map((r) => (r.status === 'fulfilled' ? r.value : null));
+
+      if (profilesRes && !profilesRes.error) setUsers((profilesRes.data || []).map(toUser));
+      if (clustersRes && !clustersRes.error) setClusters((clustersRes.data || []).map(toCluster));
+      if (unitsRes && !unitsRes.error) setUnits((unitsRes.data || []).map(toUnit));
+      if (complaintsRes && !complaintsRes.error) setComplaints((complaintsRes.data || []).map(toComplaint));
+      if (invoicesRes && !invoicesRes.error) setInvoices((invoicesRes.data || []).map(toInvoice));
+      if (expensesRes && !expensesRes.error) setExpenses((expensesRes.data || []).map(toExpense));
+      if (vendorsRes && !vendorsRes.error) setVendors((vendorsRes.data || []).map(toVendor));
+      if (leadsRes && !leadsRes.error) setLeads((leadsRes.data || []).map(toLead));
+      if (paymentsRes && !paymentsRes.error) setPayments((paymentsRes.data || []) as Payment[]);
+      if (houseTypesRes && !houseTypesRes.error) setHouseTypes((houseTypesRes.data || []) as HouseType[]);
+    } catch (error) {
+      console.error('Failed to load Supabase data:', error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {

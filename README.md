@@ -346,3 +346,13 @@ npm run dev -- --host
 
 Setelah berhasil, buka:
 - `http://localhost:5173`
+
+## 🧯 Troubleshooting blank page + loading terus
+
+Jika browser muter terus dan halaman kosong:
+
+1. Pastikan `tailwind.config.js` **tidak** memakai pattern terlalu luas seperti `./**/*.{ts,tsx}` karena ini bisa memindai `node_modules` dan bikin Vite sangat lambat/hang.
+2. Gunakan pattern `content` yang dibatasi folder project (`components`, `services`, `src`, dll).
+3. Jalankan ulang setelah clean install dependency.
+
+Konfigurasi `tailwind.config.js` di repo ini sudah diperbaiki untuk kasus tersebut.
