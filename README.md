@@ -284,3 +284,31 @@ Untuk support teknis atau pertanyaan development:
 ---
 
 **Sipema Maja** - Sistem Informasi Modern untuk Perumahan Masa Depan 🚀
+
+## ⚡ Quick Start Supabase (yang bisa langsung dicoba)
+
+Kalau kamu belum membuat SQL di Supabase, pakai urutan ini:
+
+1. Buka **Supabase Dashboard → SQL Editor**.
+2. Copy isi file `schema.sql`, lalu **Run**.
+3. Copy isi file `seed.sql`, lalu **Run**.
+   - Alternatif satu kali jalan: copy isi `supabase_setup.sql` lalu **Run**.
+
+### Jalankan web lokal
+
+```bash
+npm install
+npm run dev -- --host
+```
+
+Setelah jalan, link uji biasanya:
+- Local: `http://localhost:5173`
+- Network (satu Wi-Fi/LAN): `http://<IP-komputer-kamu>:5173`
+
+> File env sudah disiapkan di `.env` dengan URL/key Supabase yang kamu kirim.
+
+### Login awal
+
+- Input `BNIP` di kolom email akan otomatis dianggap sebagai `admin@sipema.com`.
+- Pastikan user tersebut sudah dibuat di **Supabase Authentication → Users** dan punya password.
+- Pastikan profile user ada di tabel `profiles` dengan role `SUPER_ADMIN` untuk akses penuh.
