@@ -284,3 +284,159 @@ Untuk support teknis atau pertanyaan development:
 ---
 
 **Sipema Maja** - Sistem Informasi Modern untuk Perumahan Masa Depan 🚀
+
+## ⚡ Quick Start Supabase (yang bisa langsung dicoba)
+
+Kalau kamu belum membuat SQL di Supabase, pakai urutan ini:
+
+1. Buka **Supabase Dashboard → SQL Editor**.
+2. Copy isi file `schema.sql`, lalu **Run**.
+3. Copy isi file `seed.sql`, lalu **Run**.
+   - Alternatif satu kali jalan: copy isi `supabase_setup.sql` lalu **Run**.
+
+### Jalankan web lokal
+
+```bash
+npm install
+npm run dev -- --host
+```
+
+Setelah jalan, link uji biasanya:
+- Local: `http://localhost:5173`
+- Network (satu Wi-Fi/LAN): `http://<IP-komputer-kamu>:5173`
+
+> File env sudah disiapkan di `.env` dengan URL/key Supabase yang kamu kirim.
+
+### Login awal
+
+- Input `BNIP` di kolom email akan otomatis dianggap sebagai `admin@sipema.com`.
+- Pastikan user tersebut sudah dibuat di **Supabase Authentication → Users** dan punya password.
+- Pastikan profile user ada di tabel `profiles` dengan role `SUPER_ADMIN` untuk akses penuh.
+
+## 🧯 Troubleshooting `lightningcss.win32-ia32-msvc.node` (Windows)
+
+Jika saat `npm run dev` muncul error plugin PostCSS seperti ini:
+
+`Cannot find module '../lightningcss.win32-ia32-msvc.node'`
+
+maka perbaikan yang dipakai di repo ini adalah kembali ke stack Tailwind stabil (v3) tanpa plugin `@tailwindcss/postcss`.
+
+### File yang sudah diperbaiki
+- `package.json`
+  - hapus `@tailwindcss/postcss`
+  - set `tailwindcss` ke `^3.4.17`
+- `postcss.config.js`
+  - ganti plugin dari `@tailwindcss/postcss` menjadi `tailwindcss`
+
+### Yang perlu kamu lakukan di lokal
+```bash
+# dari root project
+rm -rf node_modules package-lock.json
+npm install
+npm run dev -- --host
+```
+
+Jika kamu pakai Windows PowerShell:
+```powershell
+Remove-Item -Recurse -Force node_modules
+Remove-Item -Force package-lock.json
+npm install
+npm run dev -- --host
+```
+
+Setelah berhasil, buka:
+- `http://localhost:5173`
+
+## 🧯 Troubleshooting blank page + loading terus
+
+Jika browser muter terus dan halaman kosong:
+
+1. Pastikan `tailwind.config.js` **tidak** memakai pattern terlalu luas seperti `./**/*.{ts,tsx}` karena ini bisa memindai `node_modules` dan bikin Vite sangat lambat/hang.
+2. Gunakan pattern `content` yang dibatasi folder project (`components`, `services`, `src`, dll).
+3. Jalankan ulang setelah clean install dependency.
+
+Konfigurasi `tailwind.config.js` di repo ini sudah diperbaiki untuk kasus tersebut.
+
+### Perbaikan untuk error `[postcss] Unexpected token ... ::-webkit-scrollbar...`
+
+Error ini biasanya terjadi karena isi CSS tidak sengaja masuk ke file konfigurasi Tailwind (`tailwind.config.js`).
+
+Gunakan setup ini agar aman di semua OS:
+1. Simpan konfigurasi utama di `tailwind.config.cjs` (CommonJS).
+2. Pada `postcss.config.js`, set `tailwindcss.config` ke `./tailwind.config.cjs`.
+3. Pastikan rule CSS seperti `::-webkit-scrollbar` hanya ada di `index.css`, **bukan** di file config Tailwind.
+
+### Perbaikan final untuk error `Cannot read properties of undefined (reading 'blocklist')`
+
+Gunakan **hanya** konfigurasi CommonJS untuk Tailwind/PostCSS (hindari campuran ESM/CJS):
+
+`postcss.config.cjs`
+```js
+module.exports = {
+  plugins: [
+    require('tailwindcss')('./tailwind.config.cjs'),
+    require('autoprefixer'),
+  ],
+};
+```
+
+`tailwind.config.cjs`
+```js
+/** @type {import('tailwindcss').Config} */
+module.exports = {
+  content: [
+    './index.html',
+    './index.tsx',
+    './App.tsx',
+    './DataContext.tsx',
+    './components/**/*.{js,ts,jsx,tsx}',
+    './services/**/*.{js,ts,jsx,tsx}',
+    './lib/**/*.{js,ts,jsx,tsx}',
+    './src/**/*.{js,ts,jsx,tsx}',
+  ],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+```
+
+Dan hapus file berikut jika masih ada:
+- `postcss.config.js`
+- `tailwind.config.js`
+
+Lalu jalankan ulang bersih dependency:
+```bash
+rm -rf node_modules package-lock.json
+npm install
+npm run dev -- --host
+```
+
+### Perbaikan untuk error `DataContext.tsx: Unexpected keyword 'import' (20:0)`
+
+Ini menandakan isi `DataContext.tsx` di lokal kamu korup (biasanya ada potongan import ganda atau merge conflict).
+
+Pastikan awal file **harus** seperti ini (hanya satu blok import React di paling atas):
+
+```ts
+import React, { ReactNode, createContext, useContext, useEffect, useMemo, useState } from 'react';
+import {
+  Complaint,
+  UnitData,
+  Invoice,
+  ClusterExpense,
+  ComplaintStatus,
+  InvoiceStatus,
+  Cluster,
+  Vendor,
+  Lead,
+  User,
+  Payment,
+  HouseType,
+  Role,
+} from './types';
+import { MOCK_PAYMENTS, MOCK_HOUSE_TYPES } from './constants';
+import { supabase } from './src/lib/supabaseClient';
+```
+
+Jika berbeda, copy ulang `DataContext.tsx` dari branch terbaru repo ini.
